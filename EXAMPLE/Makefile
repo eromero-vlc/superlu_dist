@@ -68,7 +68,7 @@ DEXMG2	= pddrive2_ABglobal.o
 DEXMG3	= pddrive3_ABglobal.o
 DEXMG4	= pddrive4_ABglobal.o
 
-ZEXM	= pzdrive.o zcreate_matrix.o
+ZEXM	= zcreate_matrix.o pztest.o
 	#pzgstrf2.o pzgstrf_v3.3.o pzgstrf.o
 ZEXM1	= pzdrive1.o zcreate_matrix.o
 ZEXM2	= pzdrive2.o zcreate_matrix.o zcreate_matrix_perturbed.o
@@ -100,7 +100,7 @@ double:    pddrive pddrive1 pddrive2 pddrive3 pddrive4 \
 complex16: pzdrive pzdrive1 pzdrive2 pzdrive3 pzdrive4 \
 	   pzdrive3d pzdrive3d1 pzdrive3d2 pzdrive3d3 \
 	   pzdrive_ABglobal pzdrive1_ABglobal pzdrive2_ABglobal \
-	   pzdrive3_ABglobal pzdrive4_ABglobal
+	   pzdrive3_ABglobal pzdrive4_ABglobal pztest
 
 psdrive: $(SEXM) $(DSUPERLULIB)
 	$(LOADER) $(LOADOPTS) $(SEXM) $(LIBS) -lm -o $@
@@ -181,6 +181,9 @@ pddrive4_ABglobal: $(DEXMG4) $(DSUPERLULIB)
 pzdrive: $(ZEXM) $(DSUPERLULIB)
 	$(LOADER) $(LOADOPTS) $(ZEXM) $(LIBS) -lm -o $@
 
+pztest: pztest.o $(DSUPERLULIB)
+	$(LOADER) $(LOADOPTS) pztest.o $(LIBS) -lm -o $@
+
 pzdrive_triple: $(ZEXM) $(DSUPERLULIB)
 	$(LOADER) $(LOADOPTS) $(ZEXM) $(LIBS) -lm -o $@
 
@@ -236,6 +239,6 @@ pzdrive4_ABglobal: $(ZEXMG4) $(DSUPERLULIB)
 
 clean:	
 	rm -f *.o p[dsz]drive p[dsz]drive[1-9] p[dsz]drive3d p[dsz]drive3d[1-9] \
-	p[dsz]drive_ABglobal p[dsz]drive[1-9]_ABglobal
+	p[dsz]drive_ABglobal p[dsz]drive[1-9]_ABglobal pztest
 
 
