@@ -34,15 +34,17 @@ module load cudatoolkit/12.2
 # avoid bug in cray-libsci/21.08.1.2
 # module load cray-libsci/22.11.1.2
 module load cray-libsci/23.12.5
+# module use /global/common/software/nersc/pe/modulefiles/latest
+module load nvshmem/2.11.0
 
 # avoid bug in cudatoolkit
 export LD_LIBRARY_PATH=${LD_LIBRARY_PATH//\/usr\/local\/cuda-12.2\/compat:/}
 # export LD_LIBRARY_PATH=${LD_LIBRARY_PATH//\/usr\/local\/cuda-11.7\/compat:/}
 
-NVSHMEM_HOME=/global/cfs/cdirs/m3894/lib/PrgEnv-gnu/nvshmem_src_2.8.0-3/build/
+# NVSHMEM_HOME=/global/cfs/cdirs/m3894/lib/PrgEnv-gnu/nvshmem_src_2.8.0-3/build/
 #NVSHMEM_HOME=${CRAY_NVIDIA_PREFIX}/comm_libs/nvshmem/
 cmake .. \
-  -DCMAKE_C_FLAGS="-O2 -std=c11 -DPRNTlevel=1 -DPROFlevel=0 -DDEBUGlevel=0 -DAdd_" \
+  -DCMAKE_C_FLAGS="-O2 -std=c11 -DPRNTlevel=0 -DPROFlevel=0 -DDEBUGlevel=0 -DAdd_" \
   -DCMAKE_CXX_FLAGS="-O2" \
   -DCMAKE_Fortran_FLAGS="-O2" \
   -DCMAKE_CXX_COMPILER=CC \
@@ -58,12 +60,15 @@ cmake .. \
   -DCMAKE_INSTALL_PREFIX=. \
   -DCMAKE_INSTALL_LIBDIR=./lib \
   -DCMAKE_BUILD_TYPE=Debug \
+  -DTPL_ENABLE_MAGMALIB=ON \
+  -DTPL_MAGMA_INCLUDE_DIRS="/global/cfs/cdirs/m2957/lib/magma-2.7.1/include" \
+  -DTPL_MAGMA_LIBRARIES="/global/cfs/cdirs/m2957/lib/magma-2.7.1/lib/libmagma.so" \
   -DTPL_BLAS_LIBRARIES=/opt/cray/pe/libsci/23.12.5/GNU/12.3/x86_64/lib/libsci_gnu_123_mp.so \
   -DTPL_LAPACK_LIBRARIES=/opt/cray/pe/libsci/23.12.5/GNU/12.3/x86_64/lib/libsci_gnu_123_mp.so \
   -DTPL_PARMETIS_INCLUDE_DIRS="/global/cfs/cdirs/m3894/lib/PrgEnv-gnu/parmetis-4.0.3/include;/global/cfs/cdirs/m3894/lib/PrgEnv-gnu/parmetis-4.0.3/metis/include" \
   -DTPL_PARMETIS_LIBRARIES="/global/cfs/cdirs/m3894/lib/PrgEnv-gnu/parmetis-4.0.3/build/Linux-x86_64/libparmetis/libparmetis.so;/global/cfs/cdirs/m3894/lib/PrgEnv-gnu/parmetis-4.0.3/build/Linux-x86_64/libmetis/libmetis.so" \
   -DTPL_ENABLE_COMBBLASLIB=OFF \
-  -DTPL_ENABLE_NVSHMEM=OFF \
+  -DTPL_ENABLE_NVSHMEM=ON \
   -DTPL_NVSHMEM_LIBRARIES="-L${CUDA_HOME}/lib64/stubs/ -lnvidia-ml -L/usr/lib64 -lgdrapi -lstdc++ -L/opt/cray/libfabric/1.15.2.0/lib64 -lfabric -L${NVSHMEM_HOME}/lib -lnvshmem" \
   -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON \
   -DMPIEXEC_NUMPROC_FLAG=-n \
@@ -75,3 +80,5 @@ make pddrive3d -j16
 make f_pddrive
 
 ## -DTPL_BLAS_LIBRARIES=/global/cfs/cdirs/m3894/ptlin/tpl/amd_blis/install/amd_blis-20211021-n9-gcc9.3.0/lib/libblis.a \
+
+
